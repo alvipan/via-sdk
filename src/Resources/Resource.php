@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Ashvia\Sdk\Resources;
 
-use Ashvia\Sdk\Config\Config;
-use Ashvia\Sdk\Context\SdkContext;
+use Ashvia\Sdk\Config;
+use Ashvia\Sdk\Context;
 use Ashvia\Sdk\Http\Request;
 
 abstract class Resource
 {
     public function __construct(
-        protected readonly SdkContext $context,
+        protected readonly Context $context,
     ) {
     }
 

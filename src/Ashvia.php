@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Ashvia\Sdk;
 
-use Ashvia\Sdk\Builder\Builder;
-use Ashvia\Sdk\Config\Config;
-use Ashvia\Sdk\Context\SdkContext;
+use Ashvia\Sdk\Builder;
+use Ashvia\Sdk\Config;
+use Ashvia\Sdk\Context;
 use Ashvia\Sdk\Http\HttpClient;
 use Ashvia\Sdk\Http\Request;
 use Ashvia\Sdk\Resources\Auth;
 use Ashvia\Sdk\Resources\Resource;
+use InvalidArgumentException;
 
 final class Ashvia
 {
-    private readonly SdkContext $context;
+    private readonly Context $context;
 
     /**
      * @var array<class-string<Resource>, Resource>
@@ -22,17 +23,40 @@ final class Ashvia
     private array $resources = [];
 
     public function __construct(
-        Config $config,
+        ?Config $config = null,
+        ?string $baseUrl = null,
+        ?string $clientId = null,
+        ?string $clientSecret = null,
+        ?string $redirectUri = null,
+        int $timeout = 30,
+        bool $verifySsl = true,
+        string $userAgent = 'ASHVIA PHP SDK/1.0.0',
     ) {
-        $client = new HttpClient($config);
+        $resolvedConfig = $config ?? new Config(
+            baseUrl: $this->requireString($baseUrl, 'Base URL'),
+            clientId: $this->requireString($clientId, 'Client ID'),
+            clientSecret: $this->requireString($clientSecret, 'Client Secret'),
+            redirectUri: $this->requireString($redirectUri, 'Redirect URI'),
+            timeout: $timeout,
+            verifySsl: $verifySsl,
+            userAgent: $userAgent,
+        );
 
         $request = new Request($client);
 
-        $this->context = new SdkContext(
-            config: $config,
-            client: $client,
+        $this->context = new Context(
+            config: $resolvedConfig,
             request: $request,
         );
+    }
+
+    private function requireString(?string $value, string $name): string
+    {
+        if ($value === null || trim($value) === '') {
+            throw new InvalidArgumentException("{$name} is required.");
+        }
+
+        return trim($value);
     }
 
     public static function builder(): Builder

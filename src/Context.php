@@ -2,17 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Ashvia\Sdk\Context;
+namespace Ashvia\Sdk;
 
-use Ashvia\Sdk\Config\Config;
-use Ashvia\Sdk\Http\HttpClient;
+use Ashvia\Sdk\Config;
 use Ashvia\Sdk\Http\Request;
 
-final readonly class SdkContext
+final readonly class Context
 {
     public function __construct(
         private Config $config,
-        private HttpClient $client,
         private Request $request,
     ) {
     }
@@ -20,11 +18,6 @@ final readonly class SdkContext
     public function config(): Config
     {
         return $this->config;
-    }
-
-    public function client(): HttpClient
-    {
-        return $this->client;
     }
 
     public function request(): Request

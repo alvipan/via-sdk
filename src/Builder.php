@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Ashvia\Sdk\Builder;
+namespace Ashvia\Sdk;
 
 use Ashvia\Sdk\Ashvia;
-use Ashvia\Sdk\Config\Config;
+use Ashvia\Sdk\Config;
 use InvalidArgumentException;
 
 final class Builder

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ashvia\Sdk\Config;
+namespace Ashvia\Sdk;
 
 final readonly class Config
 {

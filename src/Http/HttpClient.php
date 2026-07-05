@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ashvia\Sdk\Http;
 
-use Ashvia\Sdk\Config\Config;
+use Ashvia\Sdk\Config;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
