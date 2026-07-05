@@ -42,6 +42,8 @@ final class Ashvia
             userAgent: $userAgent,
         );
 
+        $client = new HttpClient($resolvedConfig);
+
         $request = new Request($client);
 
         $this->context = new Context(
