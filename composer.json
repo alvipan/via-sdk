@@ -1,0 +1,29 @@
+{
+    "name": "ashvia/sdk",
+    "description": "Official PHP SDK for the ASHVIA Ecosystem.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "ashvia",
+        "sdk",
+        "php",
+        "api"
+    ],
+    "authors": [
+        {
+            "name": "Muhammad Irfan",
+            "email": "alvipan@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "guzzlehttp/guzzle": "^7.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ashvia\\Sdk\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
