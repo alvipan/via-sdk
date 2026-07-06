@@ -10,6 +10,7 @@ use Ashvia\Sdk\Context;
 use Ashvia\Sdk\Http\HttpClient;
 use Ashvia\Sdk\Http\Request;
 use Ashvia\Sdk\Resources\Auth;
+use Ashvia\Sdk\Resources\User;
 use Ashvia\Sdk\Resources\Resource;
 use InvalidArgumentException;
 
@@ -30,7 +31,7 @@ final class Ashvia
         ?string $redirectUri = null,
         int $timeout = 30,
         bool $verifySsl = true,
-        string $userAgent = 'ASHVIA PHP SDK/1.0.0',
+        string $userAgent = 'ASHVIA PHP SDK/1.0.2',
     ) {
         $resolvedConfig = $config ?? new Config(
             baseUrl: $this->requireString($baseUrl, 'Base URL'),
@@ -80,6 +81,12 @@ final class Ashvia
     {
         /** @var Auth */
         return $this->resource(Auth::class);
+    }
+
+    public function user(): User
+    {
+        /** @var User */
+        return $this->resource(User::class);
     }
 
     /**

@@ -79,26 +79,6 @@ final class Auth extends Resource
     }
 
     /**
-     * Retrieve the authenticated user.
-     */
-    public function user(string $accessToken): Response
-    {
-        return $this->request()
-            ->withToken($accessToken)
-            ->get($this->config()->userEndpoint());
-    }
-
-    /**
-     * Retrieve the OpenID Connect userinfo.
-     */
-    public function userinfo(string $accessToken): Response
-    {
-        return $this->request()
-            ->withToken($accessToken)
-            ->get($this->config()->userinfoEndpoint());
-    }
-
-    /**
      * @param array<string, string> $data
      */
     private function exchangeToken(array $data): AccessToken

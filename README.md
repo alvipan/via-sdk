@@ -96,7 +96,7 @@ $authorizationUrl = $sdk->auth()->authorizationUrl('request-state');
 $token = $sdk->auth()->token('authorization-code');
 
 // Ambil data user
-$response = $sdk->auth()->userinfo($token->accessToken());
+$user = $sdk->user()->current($token->accessToken());
 
 if ($response->successful()) {
     $user = $response->json();
