@@ -24,4 +24,27 @@ abstract class Resource
     {
         return $this->context->request();
     }
+
+    /**
+     * Build an authentication URL.
+     */
+    protected function buildAuthenticationUrl(
+        string $endpoint,
+        ?string $state = null,
+    ): string {
+        $query = [
+            'client_id' => $this->config()->clientId,
+            'redirect_uri' => $this->config()->redirectUri,
+            'response_type' => 'code',
+            'scope' => $this->config()->defaultScopes(),
+        ];
+
+        if ($state !== null && $state !== '') {
+            $query['state'] = $state;
+        }
+
+        return rtrim($this->config()->baseUrl, '/')
+            . $endpoint
+            . '?' . http_build_query($query);
+    }
 }

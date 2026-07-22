@@ -9,6 +9,7 @@ use Ashvia\Sdk\Config;
 use Ashvia\Sdk\Context;
 use Ashvia\Sdk\Http\HttpClient;
 use Ashvia\Sdk\Http\Request;
+use Ashvia\Sdk\Resources\Account;
 use Ashvia\Sdk\Resources\Auth;
 use Ashvia\Sdk\Resources\User;
 use Ashvia\Sdk\Resources\Resource;
@@ -81,6 +82,12 @@ final class Ashvia
     {
         /** @var Auth */
         return $this->resource(Auth::class);
+    }
+
+    public function account(): Account
+    {
+        /** @var Account */
+        return $this->resource(Account::class);
     }
 
     public function user(): User

@@ -11,7 +11,7 @@ final class Account extends Resource
      */
     public function registerUrl(?string $state = null): string
     {
-        return $this->buildUrl(
+        return $this->buildAuthenticationUrl(
             $this->config()->registerEndpoint(),
             $state,
         );
@@ -22,30 +22,9 @@ final class Account extends Resource
      */
     public function forgotPasswordUrl(?string $state = null): string
     {
-        return $this->buildUrl(
+        return $this->buildAuthenticationUrl(
             $this->config()->forgotPasswordEndpoint(),
             $state,
         );
-    }
-
-    /**
-     * Build an authentication URL.
-     */
-    private function buildUrl(string $endpoint, ?string $state = null): string
-    {
-        $query = [
-            'client_id' => $this->config()->clientId,
-            'redirect_uri' => $this->config()->redirectUri,
-            'response_type' => 'code',
-            'scope' => $this->config()->defaultScopes(),
-        ];
-
-        if ($state !== null && $state !== '') {
-            $query['state'] = $state;
-        }
-
-        return rtrim($this->config()->baseUrl, '/')
-            . $endpoint
-            . '?' . http_build_query($query);
     }
 }

@@ -13,9 +13,36 @@ final readonly class Config
         public string $redirectUri,
         public int $timeout = 30,
         public bool $verifySsl = true,
-        public string $userAgent = 'ASHVIA PHP SDK/1.0.0',
+        public string $userAgent = 'ASHVIA PHP SDK/1.0.2',
     ) {
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Authentication
+    |--------------------------------------------------------------------------
+    */
+
+    public function loginEndpoint(): string
+    {
+        return '/login';
+    }
+
+    public function registerEndpoint(): string
+    {
+        return '/register';
+    }
+
+    public function forgotPasswordEndpoint(): string
+    {
+        return '/forgot-password';
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | OAuth
+    |--------------------------------------------------------------------------
+    */
 
     public function authorizationEndpoint(): string
     {
@@ -32,6 +59,12 @@ final readonly class Config
         return '/oauth/tokens/revoke';
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | API
+    |--------------------------------------------------------------------------
+    */
+
     public function userEndpoint(): string
     {
         return '/api/user';
@@ -41,6 +74,12 @@ final readonly class Config
     {
         return '/api/userinfo';
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Defaults
+    |--------------------------------------------------------------------------
+    */
 
     public function defaultScopes(): string
     {

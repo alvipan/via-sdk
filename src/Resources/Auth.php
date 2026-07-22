@@ -4,33 +4,23 @@ declare(strict_types=1);
 
 namespace Ashvia\Sdk\Resources;
 
-use Ashvia\Sdk\Objects\AccessToken;
 use Ashvia\Sdk\Exceptions\AshviaException;
 use Ashvia\Sdk\Http\Response;
+use Ashvia\Sdk\Objects\AccessToken;
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
 
 final class Auth extends Resource
 {
     /**
-     * Generate the OAuth authorization URL.
+     * Generate the OAuth login URL.
      */
-    public function authorizationUrl(?string $state = null): string
+    public function loginUrl(?string $state = null): string
     {
-        $query = [
-            'client_id' => $this->config()->clientId,
-            'redirect_uri' => $this->config()->redirectUri,
-            'response_type' => 'code',
-            'scope' => $this->config()->defaultScopes(),
-        ];
-
-        if ($state !== null && $state !== '') {
-            $query['state'] = $state;
-        }
-
-        return rtrim($this->config()->baseUrl, '/')
-            . $this->config()->authorizationEndpoint()
-            . '?' . http_build_query($query);
+        return $this->buildAuthenticationUrl(
+            $this->config()->loginEndpoint(),
+            $state,
+        );
     }
 
     /**
@@ -38,15 +28,12 @@ final class Auth extends Resource
      */
     public function token(string $code): AccessToken
     {
-        return $this->exchangeToken(
-            [
-                'grant_type' => 'authorization_code',
-                'client_id' => $this->config()->clientId,
-                'client_secret' => $this->config()->clientSecret,
-                'redirect_uri' => $this->config()->redirectUri,
-                'code' => $code,
-            ],
-        );
+        return $this->exchangeToken([
+            ...$this->clientCredentials(),
+            'grant_type' => 'authorization_code',
+            'redirect_uri' => $this->config()->redirectUri,
+            'code' => $code,
+        ]);
     }
 
     /**
@@ -54,14 +41,11 @@ final class Auth extends Resource
      */
     public function refresh(string $refreshToken): AccessToken
     {
-        return $this->exchangeToken(
-            [
-                'grant_type' => 'refresh_token',
-                'client_id' => $this->config()->clientId,
-                'client_secret' => $this->config()->clientSecret,
-                'refresh_token' => $refreshToken,
-            ],
-        );
+        return $this->exchangeToken([
+            ...$this->clientCredentials(),
+            'grant_type' => 'refresh_token',
+            'refresh_token' => $refreshToken,
+        ]);
     }
 
     /**
@@ -76,6 +60,19 @@ final class Auth extends Resource
                 'token_type_hint' => 'access_token',
             ],
         );
+    }
+
+    /**
+     * OAuth client credentials.
+     *
+     * @return array<string, string>
+     */
+    private function clientCredentials(): array
+    {
+        return [
+            'client_id' => $this->config()->clientId,
+            'client_secret' => $this->config()->clientSecret,
+        ];
     }
 
     /**
