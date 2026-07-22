@@ -13,7 +13,7 @@ final readonly class Config
         public string $redirectUri,
         public int $timeout = 30,
         public bool $verifySsl = true,
-        public string $userAgent = 'ASHVIA PHP SDK/1.0.2',
+        public string $userAgent = 'ASHVIA PHP SDK/1.0.3',
     ) {
     }
 

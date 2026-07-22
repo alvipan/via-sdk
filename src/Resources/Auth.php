@@ -24,6 +24,14 @@ final class Auth extends Resource
     }
 
     /**
+     * Generate the OAuth authorization URL.
+     */
+    public function authorizationUrl(?string $state = null): string
+    {
+        return $this->loginUrl($state);
+    }
+
+    /**
      * Exchange an authorization code for an access token.
      */
     public function token(string $code): AccessToken

@@ -2,23 +2,23 @@
 
 Official PHP SDK for the ASHVIA ecosystem.
 
-## Instalasi
+## Installation
 
 ```bash
 composer require ashvia/sdk
 ```
 
-Jika sedang mengerjakan dari repositori lokal, jalankan:
+For local development:
 
 ```bash
 composer install
 ```
 
-## Konfigurasi
+## Configuration
 
-Konfigurasi dapat dilakukan dengan builder atau langsung membuat objek `Config`.
+You can configure the SDK using the builder or by creating a `Config` instance.
 
-### Menggunakan builder
+### Builder
 
 ```php
 use Ashvia\Sdk\Ashvia;
@@ -31,53 +31,107 @@ $sdk = Ashvia::builder()
     ->build();
 ```
 
-### Menggunakan `Config`
+### Config
 
 ```php
 use Ashvia\Sdk\Ashvia;
-use Ashvia\Sdk\Config\Config;
+use Ashvia\Sdk\Config;
 
 $config = new Config(
     baseUrl: 'https://passport.example.test',
     clientId: 'client-id',
     clientSecret: 'client-secret',
-    redirectUri: 'https://app.example.com/callback',
+    redirectUri: 'https://app.example.test/callback',
 );
 
 $sdk = new Ashvia(config: $config);
 ```
 
-## Login OAuth
+---
 
-### 1. Mendapatkan URL otorisasi
+# Authentication
 
-Gunakan method `authorizationUrl()` pada resource `auth()` untuk mengarahkan pengguna ke halaman login.
+## Login
 
-```php
-$authUrl = $sdk->auth()->authorizationUrl('state-123');
-
-echo $authUrl;
-```
-
-### 2. Menukar authorization code dengan access token
-
-Setelah pengguna kembali ke aplikasi dengan `code`, panggil `token()`.
+Generate the login URL and redirect the user.
 
 ```php
-$accessToken = $sdk->auth()->token('authorization-code');
-
-echo $accessToken->accessToken();
+return redirect(
+    $sdk->auth()->loginUrl('state-123')
+);
 ```
 
-### 3. Refresh token
-
-Untuk memperbarui token akses:
+> `authorizationUrl()` is still available for backward compatibility.
 
 ```php
-$newToken = $sdk->auth()->refresh('refresh-token');
+return redirect(
+    $sdk->auth()->authorizationUrl('state-123')
+);
 ```
 
-## Contoh penggunaan
+## Register
+
+Generate the registration URL.
+
+```php
+return redirect(
+    $sdk->account()->registerUrl('state-123')
+);
+```
+
+## Forgot Password
+
+Generate the forgot password URL.
+
+```php
+return redirect(
+    $sdk->account()->forgotPasswordUrl('state-123')
+);
+```
+
+---
+
+# OAuth
+
+## Exchange Authorization Code
+
+```php
+$token = $sdk->auth()->token($code);
+
+echo $token->accessToken();
+```
+
+## Refresh Token
+
+```php
+$token = $sdk->auth()->refresh($refreshToken);
+```
+
+## Revoke Token
+
+```php
+$sdk->auth()->revoke($token->accessToken());
+```
+
+---
+
+# User
+
+Retrieve the authenticated user.
+
+```php
+$response = $sdk->user()->current(
+    $token->accessToken()
+);
+
+$user = $response->json();
+
+print_r($user);
+```
+
+---
+
+# Complete Example
 
 ```php
 use Ashvia\Sdk\Ashvia;
@@ -89,21 +143,23 @@ $sdk = Ashvia::builder()
     ->redirectUri('https://app.example.test/callback')
     ->build();
 
-// Dapatkan URL otorisasi
-$authorizationUrl = $sdk->auth()->authorizationUrl('request-state');
+// Redirect user to login
+return redirect(
+    $sdk->auth()->loginUrl()
+);
 
-// Setelah mendapatkan authorization code:
-$token = $sdk->auth()->token('authorization-code');
+// Callback
+$token = $sdk->auth()->token(request('code'));
 
-// Ambil data user
-$user = $sdk->user()->current($token->accessToken());
+$user = $sdk->user()->current(
+    $token->accessToken()
+);
 
-if ($response->successful()) {
-    $user = $response->json();
-    print_r($user);
-}
+print_r($user->json());
 ```
 
-## License
+---
 
-This library is released under the MIT License.
+# License
+
+Released under the MIT License.
